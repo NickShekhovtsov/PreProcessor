@@ -298,6 +298,18 @@ namespace PreProcessor
                     Fpen.CustomEndCap = new AdjustableArrowCap(6, 3);
                     Fpen.Width = 7;
                     g.DrawLine(Fpen, w, axle, w + 40, axle);
+
+                    int x = w + 20;
+
+                        Point pt = new Point(x, axle - 45);
+
+                       Font ft = new Font(label1.Font.Name, 15);
+
+                        Brush bh = Brushes.Black;
+                        string st = "F= " + construction.nodesLoad[i].ToString();
+                        g.DrawString(st, ft, bh, pt);
+                    
+
                 }
 
                 if (construction.nodesLoad[i] < 0)
@@ -307,6 +319,17 @@ namespace PreProcessor
                     Fpen.CustomEndCap = new AdjustableArrowCap(6, 3);
                     Fpen.Width = 7;
                     g.DrawLine(Fpen, w, axle, w - 40, axle);
+
+
+                    int x = w - 80;
+
+                    Point pt = new Point(x, axle - 45);
+
+                    Font ft = new Font(label1.Font.Name, 15);
+
+                    Brush bh = Brushes.Black;
+                    string st = "F= " + construction.nodesLoad[i].ToString();
+                    g.DrawString(st, ft, bh, pt);
                 }
 
             }
@@ -358,7 +381,7 @@ namespace PreProcessor
                 {
                     int x = construction.kernels[i].location.X + (construction.kernels[i].location.Width / 2);
                
-                    Point pt = new Point(x, axle - 40);
+                    Point pt = new Point(x-8, axle + 40);
                    
                     Font ft = new Font(label1.Font.Name,15);
                     
