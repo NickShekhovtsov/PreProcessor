@@ -20,5 +20,10 @@ namespace PreProcessor
             File.WriteAllText("construction.json", JsonString);
         }
 
+        public void LoadFromJson()
+        {
+            
+        }
+
     }
 }

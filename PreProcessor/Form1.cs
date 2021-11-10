@@ -64,7 +64,7 @@ namespace PreProcessor
 
                 for (int i = 0; i < 4; i++)
                 {
-                    dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[1].Value = 600;
+                    dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[1].Value = 6;
 
                 }
 
@@ -415,117 +415,125 @@ namespace PreProcessor
             bool check = false;
             Graphics g = pictureBox1.CreateGraphics();
             g.Clear(Color.White);
-            
+
             if (construction.kernels.Count > 0)
             {
-                for (int i = 0; i < construction.kernels.Count; i++)
+                if (checkBox1.Checked == false && checkBox2.Checked == false)
                 {
-                    if (dataGridView1.Rows[i].Cells[0].Value == null |
-                         dataGridView1.Rows[i].Cells[1].Value == null |
-                         dataGridView1.Rows[i].Cells[2].Value == null |
-                         dataGridView1.Rows[i].Cells[3].Value == null)
-                    {
-                        check = true;
-                    }
 
+                    MessageBox.Show("Должна быть минимум одна активная заделка");
                 }
-
-                if (!check)
-                {
+                else 
+                { 
                     for (int i = 0; i < construction.kernels.Count; i++)
                     {
-                        construction.kernels[i].L = Int32.Parse(dataGridView1.Rows[i].Cells[0].Value.ToString());
-                        construction.kernels[i].A = Int32.Parse(dataGridView1.Rows[i].Cells[1].Value.ToString());
-                        construction.kernels[i].E = double.Parse(dataGridView1.Rows[i].Cells[2].Value.ToString());
-                        construction.kernels[i].b = double.Parse(dataGridView1.Rows[i].Cells[3].Value.ToString());
-                        construction.kernels[i].distributedLoad = double.Parse(dataGridView3.Rows[i].Cells[1].Value.ToString());
+                        if (dataGridView1.Rows[i].Cells[0].Value == null |
+                             dataGridView1.Rows[i].Cells[1].Value == null |
+                             dataGridView1.Rows[i].Cells[2].Value == null |
+                             dataGridView1.Rows[i].Cells[3].Value == null)
+                        {
+                            check = true;
+                        }
+
                     }
 
-                    construction.nodesLoad.Clear();
-                    for (int i = 0; i < dataGridView2.Rows.Count; i++)
+                    if (!check)
                     {
-                        construction.nodesLoad.Add(double.Parse(dataGridView2.Rows[i].Cells[1].Value.ToString()));
+                        for (int i = 0; i < construction.kernels.Count; i++)
+                        {
+                            construction.kernels[i].L = Int32.Parse(dataGridView1.Rows[i].Cells[0].Value.ToString());
+                            construction.kernels[i].A = Int32.Parse(dataGridView1.Rows[i].Cells[1].Value.ToString());
+                            construction.kernels[i].E = double.Parse(dataGridView1.Rows[i].Cells[2].Value.ToString());
+                            construction.kernels[i].b = double.Parse(dataGridView1.Rows[i].Cells[3].Value.ToString());
+                            construction.kernels[i].distributedLoad = double.Parse(dataGridView3.Rows[i].Cells[1].Value.ToString());
+                        }
+
+                        construction.nodesLoad.Clear();
+                        for (int i = 0; i < dataGridView2.Rows.Count; i++)
+                        {
+                            construction.nodesLoad.Add(double.Parse(dataGridView2.Rows[i].Cells[1].Value.ToString()));
+                        }
                     }
-                }
 
-                construction.totalWidth = 0;
-                for (int i = 0; i < construction.kernels.Count; i++)
-                {
-
-                    construction.totalWidth += construction.kernels[i].L;
-
-                }
-
-
-               
-
-
-
-
-                int max = construction.kernels[0].A;
-                double k;
-
-                for (int i = 0; i < construction.kernels.Count; i++)
-
-                {
-                    construction.kernels[i].location.Height = construction.kernels[i].A;
-
-                    if (construction.kernels[i].location.Height > max)
+                    construction.totalWidth = 0;
+                    for (int i = 0; i < construction.kernels.Count; i++)
                     {
-                        max = construction.kernels[i].A;
-                    }
-                }
 
-                if (max > 500)
-                {
-                    k = 500.0f / max;
+                        construction.totalWidth += construction.kernels[i].L;
+
+                    }
+
+
+
+
+
+
+
+                    int max = construction.kernels[0].A * 100;
+                    double k;
+
+                    for (int i = 0; i < construction.kernels.Count; i++)
+
+                    {
+                        construction.kernels[i].location.Height = construction.kernels[i].A * 100;
+
+                        if (construction.kernels[i].location.Height > max)
+                        {
+                            max = construction.kernels[i].A * 100;
+                        }
+                    }
+
+                    if (max > 500)
+                    {
+                        k = 500.0f / max;
+
+                        for (int i = 0; i < construction.kernels.Count; i++)
+                        {
+                            construction.kernels[i].location.Height = ((int)(construction.kernels[i].location.Height * k));
+                            if (construction.kernels[i].location.Height == 0)
+                            {
+                                construction.kernels[i].location.Height = 1;
+                            }
+                        }
+                    }
+
+
+
+
 
                     for (int i = 0; i < construction.kernels.Count; i++)
                     {
-                        construction.kernels[i].location.Height = ((int)(construction.kernels[i].location.Height * k));
-                        if (construction.kernels[i].location.Height == 0)
+                        if (construction.kernels[i] != null)
                         {
-                            construction.kernels[i].location.Height = 1;
+
+                            int h = construction.kernels[i].location.Height;
+
+                            if (i == 0)
+                                construction.kernels[i].location = new Rectangle(50, axle - h / 2, (pictureBox1.Width - 120) / construction.totalWidth * construction.kernels[i].L, h);
+                            else
+                            {
+                                construction.kernels[i].location = new Rectangle(construction.kernels[i - 1].location.Width + construction.kernels[i - 1].location.X, axle
+                                    - h / 2, (pictureBox1.Width - 120) / construction.totalWidth * construction.kernels[i].L, h);
+                            }
                         }
                     }
-                }
 
 
 
-
-
-                for (int i = 0; i < construction.kernels.Count; i++)
-                {
-                    if (construction.kernels[i] != null)
+                    for (int i = 0; i < construction.kernels.Count; i++)
                     {
-
-                        int h = construction.kernels[i].location.Height;
-
-                        if (i == 0)
-                            construction.kernels[i].location = new Rectangle(50, axle - h / 2, (pictureBox1.Width - 120) / construction.totalWidth * construction.kernels[i].L, h);
-                        else
-                        {
-                            construction.kernels[i].location = new Rectangle(construction.kernels[i - 1].location.Width + construction.kernels[i - 1].location.X, axle
-                                - h / 2, (pictureBox1.Width - 120) / construction.totalWidth * construction.kernels[i].L, h);
-                        }
+                        if (construction.kernels[i] != null)
+                            g.DrawRectangle(Pens.Black, construction.kernels[i].location);
                     }
+
+                    DrawDistibutedLoads(g);
+                    DrawSealing(g);
+                    DrawNodesLoads(g);
+                    DrawDistributedLoadsNames(g);
+
+
+
                 }
-
-
-
-                for (int i = 0; i < construction.kernels.Count; i++)
-                {
-                    if (construction.kernels[i] != null)
-                        g.DrawRectangle(Pens.Black, construction.kernels[i].location);
-                }
-                
-                DrawDistibutedLoads(g);
-                DrawSealing(g);
-                DrawNodesLoads(g);
-                DrawDistributedLoadsNames(g);
-
-
-
             }
             
         }
