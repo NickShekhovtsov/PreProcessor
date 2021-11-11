@@ -650,11 +650,78 @@ namespace PreProcessor
 
         }
 
-       
 
+        private void updateDataGrids()
+        {
+            dataGridView1.Rows.Clear();
+            dataGridView2.Rows.Clear();
+            dataGridView3.Rows.Clear();
+            for (int i = 0; i < construction.kernels.Count; i++)
+            {
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[dataGridView1.Rows.GetLastRow(DataGridViewElementStates.None)].Cells[0].Value = construction.kernels[i].L;
+                dataGridView1.Rows[dataGridView1.Rows.GetLastRow(DataGridViewElementStates.None)].Cells[1].Value = construction.kernels[i].A;
+                dataGridView1.Rows[dataGridView1.Rows.GetLastRow(DataGridViewElementStates.None)].Cells[2].Value = construction.kernels[i].E;
+                dataGridView1.Rows[dataGridView1.Rows.GetLastRow(DataGridViewElementStates.None)].Cells[3].Value = construction.kernels[i].b;
+                
+            }
+
+            for (int i=0;i<construction.nodesLoad.Count;i++)
+            {
+                dataGridView2.Rows.Add();
+                dataGridView2.Rows[dataGridView2.Rows.GetLastRow(DataGridViewElementStates.None)].Cells[0].Value = i + 1;
+                dataGridView2.Rows[dataGridView2.Rows.GetLastRow(DataGridViewElementStates.None)].Cells[1].Value = construction.nodesLoad[i];
+            }
+
+            for (int i = 0; i < construction.kernels.Count; i++)
+            {
+                dataGridView3.Rows.Add();
+                dataGridView3.Rows[dataGridView3.Rows.GetLastRow(DataGridViewElementStates.None)].Cells[0].Value = i + 1;
+                dataGridView3.Rows[dataGridView3.Rows.GetLastRow(DataGridViewElementStates.None)].Cells[1].Value = construction.kernels[i].distributedLoad;
+            }
+
+            checkBox2.Checked = construction.leftSealing;
+            checkBox2.Checked = construction.rightSealing;
+
+            dataGridView1.Update();
+            dataGridView2.Update();
+            dataGridView3.Update();
+
+        }
         private void button2_Click(object sender, EventArgs e)
         {
-            construction.SaveToJson();
+            
+            SaveFileDialog sfd=new SaveFileDialog();
+            sfd.Filter = "Json files (*.json)|*.json";
+           
+            if (sfd.ShowDialog()==DialogResult.OK)
+            construction.SaveToJson(sfd.FileName);
+        }
+
+        private void Load_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Json files (*.json)|*.json";
+           
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                construction.LoadFromJson(ofd.FileName);
+
+                
+
+                updateDataGrids();
+                button1_Click(sender, e);
+                //for (int i = 0; i < construction.kernels.Count; i++)
+                //{
+                //    if (construction.kernels[i] != null)
+                //        g.DrawRectangle(Pens.Black, construction.kernels[i].location);
+                //}
+
+                //DrawDistibutedLoads(g);
+                //DrawSealing(g);
+                //DrawNodesLoads(g);
+                //DrawDistributedLoadsNames(g);
+            }
         }
     }
    
