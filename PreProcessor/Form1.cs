@@ -575,9 +575,22 @@ namespace PreProcessor
         }
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            
-           
 
+
+            if (e.ColumnIndex == 0)
+            {
+                int res;
+                if (e.FormattedValue.ToString() == string.Empty)
+                    return;
+                else
+                    if (!int.TryParse(e.FormattedValue.ToString(), out res) || e.FormattedValue.ToString().Length > 10)
+                {
+                    dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 1;
+                    MessageBox.Show("Введите числовое значение");
+                    e.Cancel = true;
+                    return;
+                }
+            }
             if (e.ColumnIndex == 1)
             {
                 int res;
@@ -711,17 +724,18 @@ namespace PreProcessor
 
                 updateDataGrids();
                 button1_Click(sender, e);
-                //for (int i = 0; i < construction.kernels.Count; i++)
-                //{
-                //    if (construction.kernels[i] != null)
-                //        g.DrawRectangle(Pens.Black, construction.kernels[i].location);
-                //}
-
-                //DrawDistibutedLoads(g);
-                //DrawSealing(g);
-                //DrawNodesLoads(g);
-                //DrawDistributedLoadsNames(g);
+                
             }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
    
